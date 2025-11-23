@@ -1,3 +1,9 @@
-spacy
 streamlit
-scikit-learn
+torch
+transformers
+sentencepiece
+spacy
+huggingface_hub
+bitsandbytes
+accelerate
+tqdm
