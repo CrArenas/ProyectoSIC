@@ -14,7 +14,7 @@ if os.path.exists("user_profile.json"):
 # CONFIGURACIÓN GEMINI
 # -----------------------------------
 
-API_KEY = "AIzaSyBTMuq59nqBdAMqaZCdq6gGFowV7nWyUf4"
+API_KEY = "X"
 genai.configure(api_key=API_KEY)
 
 MODEL_NAME = "gemini-flash-latest"
