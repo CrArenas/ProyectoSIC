@@ -2,8 +2,8 @@ streamlit
 torch
 transformers
 sentencepiece
-spacy
 huggingface_hub
-bitsandbytes
 accelerate
+bitsandbytes
 tqdm
+google-generativeai

@@ -1,53 +1,6 @@
 {
-  "intereses": [
-    "Docker"
-  ],
-  "habilidades": [],
-  "nivel": "no especificado",
-  "conversacion": [
-    {
-      "role": "user",
-      "content": "Holii"
-    },
-    {
-      "role": "bot",
-      "content": "Si no se han dado respuestas anteriores, es posible que la pregunta sea diferente."
-    },
-    {
-      "role": "user",
-      "content": "Pq me ignora"
-    },
-    {
-      "role": "bot",
-      "content": "Si no se han dado respuestas anteriores, es posible que la pregunta sea diferente."
-    },
-    {
-      "role": "user",
-      "content": ":("
-    },
-    {
-      "role": "user",
-      "content": ":("
-    },
-    {
-      "role": "bot",
-      "content": "Si no se han dado respuestas anteriores, es posible que la pregunta sea diferente."
-    },
-    {
-      "role": "user",
-      "content": "asd"
-    },
-    {
-      "role": "user",
-      "content": "asd"
-    },
-    {
-      "role": "user",
-      "content": "asd"
-    },
-    {
-      "role": "bot",
-      "content": "Buscando un mentor en el campo de la tecnología y la orientación vocacional:\n\nPerfil usuario: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nPerfil usuario: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nPerfil usuario: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nPerfil usuario: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nPerfil usuario: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nPerfil usuario: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nPerfil usuario: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nPerfil usuario: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nPerfil usuario: \n\nBuscando un mentor en el campo de la tecnología y la orientación vocacional: \n\nBuscando un mentor en"
-    }
+  "historial": [
+    "Holaa",
+    "Cómo estás ?"
   ]
 }

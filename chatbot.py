@@ -1,33 +1,30 @@
-# chatbot.py (versión rápida con 8-bit)
+# chatbot.py — Gemini versión completa
 import os
 import json
 from typing import Dict, Any
+import google.generativeai as genai
 
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
+if os.path.exists("user_profile.json"):
+        with open("user_profile.json", "w", encoding="utf-8") as f:
+            f.write("{}")
+
+
+# -----------------------------------
+# CONFIGURACIÓN GEMINI
+# -----------------------------------
+
+API_KEY = "AIzaSyBTMuq59nqBdAMqaZCdq6gGFowV7nWyUf4"
+genai.configure(api_key=API_KEY)
+
+MODEL_NAME = "gemini-flash-latest"
 PROFILE_PATH = "user_profile.json"
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"Cargando modelo {MODEL_NAME} en {DEVICE} en 8-bit...")
-
-# --- CONFIGURACIÓN PARA 8-BIT ---
-bnb_config = BitsAndBytesConfig(
-    load_in_8bit=True,
-    llm_int8_threshold=6.0,
-)
-
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL_NAME,
-    quantization_config=bnb_config,
-    device_map="auto"
-)
 
 # -----------------------------------
 # Perfil del usuario
 # -----------------------------------
+
 def load_profile() -> Dict[str, Any]:
     if os.path.exists(PROFILE_PATH):
         with open(PROFILE_PATH, "r", encoding="utf-8") as f:
@@ -41,53 +38,55 @@ def save_profile(profile: Dict[str, Any]):
 
 
 def update_profile(profile: Dict[str, Any], user_input: str):
-    profile.setdefault("historial_temas", [])
+    profile.setdefault("historial", [])
 
+    # Guardamos mensajes cortos como intereses
     if len(user_input) < 200:
-        profile["historial_temas"].append(user_input)
+        profile["historial"].append(user_input)
 
     return profile
 
 
 # -----------------------------------
-# Generación rápida
+# FUNCIÓN PRINCIPAL DEL CHATBOT
 # -----------------------------------
-def generate(prompt: str):
-    inputs = tokenizer(prompt, return_tensors="pt").to(DEVICE)
 
-    output = model.generate(
-        **inputs,
-        max_new_tokens=200,
-        temperature=0.7,
-        top_p=0.9,
-        do_sample=True,
-        repetition_penalty=1.05
-    )
-
-    return tokenizer.decode(output[0], skip_special_tokens=True)
-
-
-# -----------------------------------
-# Función principal del chatbot
-# -----------------------------------
 def get_response(user_input: str):
 
+    # Cargar y actualizar perfil en cada mensaje
     profile = load_profile()
     profile = update_profile(profile, user_input)
+    save_profile(profile)
 
+    # Construcción del prompt
     prompt = f"""
-Eres Jerry, un orientador tecnológico amable, cercano y realista.
-Tu estilo es cálido, directo y humano.
-Evita sonar como robot o como manual.
+Eres Jerry, un orientador tecnológico, eres amable, cálido, cercano y realista.
+Hablas como una persona normal, sin sonar robótico, y te gusta usar emojis simples :)
+
+ Tu misión:
+- ayudar al usuario a entender el mundo de la tecnología
+- explicar conceptos técnicos con claridad
+- recomendar rutas de aprendizaje
+- motivar de manera honesta y realista
+- dar consejos prácticos basados en el perfil del usuario
+
+ Perfil del usuario:
+{json.dumps(profile, ensure_ascii=False)}
+
+No uses listas ni formato técnico rígido.
+
+No te extiendas tanto en tus mensajes, es bueno que seas conciso y directo, con 2 frases es suficiente.
+
+No hablas con jergas de ningún país, utilizas un español neutro.
 
 Usuario: {user_input}
 Jerry:
 """
 
-    raw = generate(prompt)
+    # Llamado a Gemini
+    model = genai.GenerativeModel(MODEL_NAME)
 
-    if "Jerry:" in raw:
-        raw = raw.split("Jerry:")[-1].strip()
+    response = model.generate_content(prompt)
 
-    save_profile(profile)
-    return raw
+    # Convertir respuesta a texto plano
+    return response.text.strip()
