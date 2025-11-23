@@ -14,37 +14,22 @@ def load_image_base64(path):
 bot_pic64 = load_image_base64("Imagenes/Botsito.jpg")
 user_pic64 = load_image_base64("Imagenes/Perfil.jpg")
 
-st.set_page_config(page_title="Orientador Vocacional", page_icon="🧭", layout="centered")
+st.set_page_config(page_title="Jerry", page_icon="", layout="centered")
 
 st.markdown("""
     <style>
-
-        /* Fondo global del sitio (más claro) */
-        body {
-            background-color: #eceff1 !important;
-        }
-
-        .main {
-            background-color: #eceff1 !important;
-        }
-
-        /* 📦 Caja principal del chat */
-        .chat-wrapper {
-            background-color: #1f2b38;
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 700px;
-            margin: auto;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
-        /* Contenedor general del contenido del chat */
+        /* Contenedor interno del chat */
         .chat-container {
             max-width: 600px;
             margin: auto;
             padding: 10px;
+        }
+
+        /* Scroll interno */
+        .chat-scroll {
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 10px;
         }
 
         /* Cabecera */
@@ -72,7 +57,7 @@ st.markdown("""
             color: white;
         }
 
-        /* Fila del mensaje */
+        /* Filas */
         .message-row {
             display: flex;
             align-items: flex-end;
@@ -109,7 +94,7 @@ st.markdown("""
             font-size: 16px;
         }
 
-        /* Hover → verde */
+        /* Hover botón */
         button[kind="secondary"]:hover {
             background-color: #008069 !important;
             color: white !important;
@@ -119,7 +104,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --------------------------
-# Cabecera superior del chat
+# Cabecera superior
 # --------------------------
 st.markdown(
     f"""
@@ -132,18 +117,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 # --------------------------
-# Crear historial de mensajes
+# Historial
 # --------------------------
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
-
 # --------------------------
-# Mostrar los mensajes con foto de perfil
+# Contenedor con scroll
 # --------------------------
-st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
+st.markdown("<div class='chat-container chat-scroll' id='chat-box'>", unsafe_allow_html=True)
 
 for msg in st.session_state["messages"]:
     if msg["role"] == "user":
@@ -169,7 +152,24 @@ for msg in st.session_state["messages"]:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
+# --------------------------
+# Auto-scroll al final
+# --------------------------
+st.markdown(
+    """
+    <script>
+        const chatBox = window.parent.document.getElementById("chat-box");
+        if (chatBox) {
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+    """,
+    unsafe_allow_html=True
+)
+
+# --------------------------
 # Input
+# --------------------------
 col1, col2 = st.columns([8, 2])
 
 with col1:
@@ -183,8 +183,9 @@ with col1:
 with col2:
     send = st.button("Enviar", use_container_width=True)
 
-
-# Función para enviar el mensaje
+# --------------------------
+# Enviar mensaje
+# --------------------------
 def procesar_mensaje():
     if user_input.strip():
         st.session_state["messages"].append({"role": "user", "content": user_input})
@@ -192,7 +193,5 @@ def procesar_mensaje():
         st.session_state["messages"].append({"role": "bot", "content": bot_reply})
         st.rerun()
 
-
-# Enviar con botón
 if send:
     procesar_mensaje()
