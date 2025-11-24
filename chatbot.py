@@ -1,4 +1,4 @@
-# chatbot.py — Gemini versión completa
+# chatbot.py 
 import os
 import json
 from typing import Dict, Any
