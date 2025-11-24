@@ -11,7 +11,7 @@ def load_image_base64(path):
     return base64.b64encode(data).decode()
 
 # Cargar imágenes en base64
-bot_pic64 = load_image_base64("Imagenes/Botsito.jpg")
+bot_pic64 = load_image_base64("Imagenes/Botsito.png")
 user_pic64 = load_image_base64("Imagenes/Perfil.jpg")
 
 st.set_page_config(page_title="Jerry", page_icon="", layout="centered")
