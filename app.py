@@ -13,9 +13,7 @@ user_pic64 = load_image_base64("Imagenes/Perfil.jpg")
 
 st.set_page_config(page_title="Jerry", page_icon="", layout="centered")
 
-# -------------------------------------------------
-#  ESTILOS CSS MEJORADOS
-# -------------------------------------------------
+
 st.markdown("""
     <style>
 
@@ -136,9 +134,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------------------------
-# CABECERA
-# -------------------------------------------------
 st.markdown(
     f"""
     <div class="chat-container">
@@ -154,9 +149,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# -------------------------------------------------
-# MANEJO DE MENSAJES
-# -------------------------------------------------
+
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
@@ -182,9 +175,7 @@ for msg in st.session_state["messages"]:
 
 st.markdown("</div></div>", unsafe_allow_html=True)
 
-# -------------------------------------------------
-# SCROLL AUTOMÁTICO
-# -------------------------------------------------
+
 st.markdown("""
 <script>
     const chatBox = window.parent.document.getElementById("chat-box");
@@ -196,9 +187,7 @@ st.markdown("""
 </script>
 """, unsafe_allow_html=True)
 
-# -------------------------------------------------
-# INPUT Y BOTÓN
-# -------------------------------------------------
+
 col1, col2 = st.columns([8, 2])
 
 with col1:
@@ -207,9 +196,7 @@ with col1:
 with col2:
     send = st.button("Enviar", use_container_width=True)
 
-# -------------------------------------------------
-# FUNCIÓN DE ENVÍO
-# -------------------------------------------------
+
 def procesar_mensaje():
     if user_input.strip():
         st.session_state["messages"].append({"role": "user", "content": user_input})
