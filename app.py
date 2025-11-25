@@ -2,15 +2,12 @@ import streamlit as st
 from chatbot import get_response
 import base64
 
-# --------------------------
-# Función para convertir imágenes locales a base64
-# --------------------------
+
 def load_image_base64(path):
     with open(path, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
 
-# Cargar imágenes en base64
 bot_pic64 = load_image_base64("Imagenes/Botsito.png")
 user_pic64 = load_image_base64("Imagenes/Perfil.jpg")
 
@@ -103,9 +100,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --------------------------
-# Cabecera superior
-# --------------------------
 st.markdown(
     f"""
     <div class='chat-header'>
@@ -117,15 +111,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --------------------------
-# Historial
-# --------------------------
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
-# --------------------------
-# Contenedor con scroll
-# --------------------------
+
 st.markdown("<div class='chat-container chat-scroll' id='chat-box'>", unsafe_allow_html=True)
 
 for msg in st.session_state["messages"]:
@@ -152,9 +141,6 @@ for msg in st.session_state["messages"]:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --------------------------
-# Auto-scroll al final
-# --------------------------
 st.markdown(
     """
     <script>
@@ -167,9 +153,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --------------------------
-# Input
-# --------------------------
 col1, col2 = st.columns([8, 2])
 
 with col1:
@@ -183,9 +166,6 @@ with col1:
 with col2:
     send = st.button("Enviar", use_container_width=True)
 
-# --------------------------
-# Enviar mensaje
-# --------------------------
 def procesar_mensaje():
     if user_input.strip():
         st.session_state["messages"].append({"role": "user", "content": user_input})

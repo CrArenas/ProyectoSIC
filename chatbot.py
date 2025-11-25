@@ -1,4 +1,4 @@
-# chatbot.py 
+
 import os
 import json
 from typing import Dict, Any
@@ -10,20 +10,12 @@ if os.path.exists("user_profile.json"):
             f.write("{}")
 
 
-# -----------------------------------
-# CONFIGURACIÓN GEMINI
-# -----------------------------------
-
 API_KEY = "X"
 genai.configure(api_key=API_KEY)
 
 MODEL_NAME = "gemini-flash-latest"
 PROFILE_PATH = "user_profile.json"
 
-
-# -----------------------------------
-# Perfil del usuario
-# -----------------------------------
 
 def load_profile() -> Dict[str, Any]:
     if os.path.exists(PROFILE_PATH):
@@ -40,25 +32,22 @@ def save_profile(profile: Dict[str, Any]):
 def update_profile(profile: Dict[str, Any], user_input: str):
     profile.setdefault("historial", [])
 
-    # Guardamos mensajes cortos como intereses
+  
     if len(user_input) < 200:
         profile["historial"].append(user_input)
 
     return profile
 
 
-# -----------------------------------
-# FUNCIÓN PRINCIPAL DEL CHATBOT
-# -----------------------------------
 
 def get_response(user_input: str):
 
-    # Cargar y actualizar perfil en cada mensaje
+
     profile = load_profile()
     profile = update_profile(profile, user_input)
     save_profile(profile)
 
-    # Construcción del prompt
+
     prompt = f"""
 Eres Jerry, un orientador tecnológico, eres amable, cálido, cercano y realista.
 Hablas como una persona normal, sin sonar robótico, y te gusta usar emojis simples :)
@@ -83,10 +72,8 @@ Usuario: {user_input}
 Jerry:
 """
 
-    # Llamado a Gemini
     model = genai.GenerativeModel(MODEL_NAME)
 
     response = model.generate_content(prompt)
 
-    # Convertir respuesta a texto plano
     return response.text.strip()
