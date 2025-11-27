@@ -10,7 +10,7 @@ if os.path.exists("user_profile.json"):
             f.write("{}")
 
 
-API_KEY = "AIzaSyDGF6SL44uNolO82TFBFNvzCdzX8PAcUIk"
+API_KEY = "X"
 genai.configure(api_key=API_KEY)
 
 MODEL_NAME = "gemini-flash-latest"

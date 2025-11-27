@@ -1,208 +1,120 @@
 import streamlit as st
 from chatbot import get_response
 import base64
+import time
 
-
+# ================= IMÁGENES BASE64 =================
 def load_image_base64(path):
     with open(path, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+        return base64.b64encode(f.read()).decode()
 
 bot_pic64 = load_image_base64("Imagenes/Botsito.png")
 user_pic64 = load_image_base64("Imagenes/Perfil.jpg")
 
-st.set_page_config(page_title="Jerry", page_icon="", layout="centered")
+st.set_page_config(page_title="Jerry", layout="centered")
 
-
+# =============== FONDO DEGRADADO ===============
 st.markdown("""
-    <style>
-
-        body {
-            background-color: #eef2f3;
-        }
-
-        /* Contenedor principal */
-        .chat-container {
-            max-width: 650px;
-            margin: auto;
-            padding: 15px;
-            background: white;
-            border-radius: 18px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-        }
-
-        /* Scroll interno */
-        .chat-scroll {
-            max-height: 450px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        /* Cabecera */
-        .chat-header {
-            display: flex;
-            align-items: center;
-            background: linear-gradient(135deg, #1e3c57, #335c81);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            color: white;
-        }
-
-        .chat-header img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 12px;
-            object-fit: cover;
-            border: 2px solid #ffffff55;
-        }
-
-        .chat-header .name {
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        /* Filas */
-        .message-row {
-            display: flex;
-            align-items: flex-end;
-            margin-bottom: 12px;
-        }
-
-        /* Fotos */
-        .bot-pic, .user-pic {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .bot-pic { margin-right: 8px; }
-        .user-pic { margin-left: 8px; }
-
-        /* Burbujas bot */
-        .bot-msg {
-            background: #ffffff;
-            padding: 12px 16px;
-            border-radius: 15px 15px 15px 5px;
-            max-width: 60%;
-            color: #1e1e1e;
-            font-size: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            border-left: 4px solid #335c81;
-        }
-
-        /* Burbujas usuario */
-        .user-msg {
-            background: #008069;
-            padding: 12px 16px;
-            border-radius: 15px 15px 5px 15px;
-            max-width: 60%;
-            color: white;
-            font-size: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            border-right: 4px solid #006b55;
-        }
-
-        /* Input */
-        .stTextInput > div > div > input {
-            border-radius: 12px;
-            border: 1px solid #cccccc;
-            font-size: 17px;
-            padding: 10px;
-        }
-
-        .stTextInput > div > div > input:focus {
-            border: 1px solid #335c81;
-        }
-
-        /* Botón */
-        .stButton > button {
-            background-color: #335c81;
-            border-radius: 12px;
-            padding: 10px;
-            color: white;
-            border: none;
-            font-size: 15px;
-        }
-
-        .stButton > button:hover {
-            background-color: #1e3c57;
-        }
-
-    </style>
-""", unsafe_allow_html=True)
-
-st.markdown(
-    f"""
-    <div class="chat-container">
-        <div class='chat-header'>
-            <img src="data:image/jpeg;base64,{bot_pic64}">
-            <div>
-                <div class='name'>Jerry</div>
-                <div style="font-size:13px; opacity:0.8;">Tu asistente personal</div>
-            </div>
-        </div>
-        <div style="margin-bottom: 10px;">¿En qué puedo ayudarte hoy?</div>
-    """,
-    unsafe_allow_html=True
-)
-
-
-if "messages" not in st.session_state:
-    st.session_state["messages"] = []
-
-st.markdown("<div class='chat-scroll' id='chat-box'>", unsafe_allow_html=True)
-
-for msg in st.session_state["messages"]:
-    if msg["role"] == "user":
-        st.markdown(
-            f"""
-            <div class="message-row" style="justify-content:flex-end;">
-                <div class="user-msg">{msg['content']}</div>
-                <img class="user-pic" src="data:image/jpeg;base64,{user_pic64}">
-            </div>
-            """, unsafe_allow_html=True)
-    else:
-        st.markdown(
-            f"""
-            <div class="message-row" style="justify-content:flex-start;">
-                <img class="bot-pic" src="data:image/jpeg;base64,{bot_pic64}">
-                <div class="bot-msg">{msg['content']}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-st.markdown("</div></div>", unsafe_allow_html=True)
-
-
-st.markdown("""
-<script>
-    const chatBox = window.parent.document.getElementById("chat-box");
-    if (chatBox) {
-        setTimeout(() => {
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }, 50);
+<style>
+    .stApp {
+        background: linear-gradient(135deg,#1e3c57,#335c81,#213d5a);
+        background-attachment: fixed;
     }
-</script>
+
+    /* SCROLL */
+    .chat-scroll{max-height:420px;overflow-y:auto;padding:10px;}
+    .chat-scroll::-webkit-scrollbar{width:7px;}
+    .chat-scroll::-webkit-scrollbar-thumb{background:#7792aa;border-radius:10px;}
+
+    /* BURBUJAS */
+    .bot-msg{background:#fff;padding:12px 16px;border-radius:15px 15px 15px 5px;
+             border-left:4px solid #335c81;font-size:16px;max-width:60%;
+             box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .user-msg{background:#008069;padding:12px 16px;color:white;border-radius:15px 15px 5px 15px;
+              border-right:4px solid #006b55;font-size:16px;max-width:60%;
+              box-shadow:0 2px 6px rgba(0,0,0,.1)}
+
+    .msg{display:flex;margin-bottom:12px;animation:fadeUp .3s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;}}
+
+    .header{padding:15px;border-radius:18px;margin-bottom:12px;color:white;
+            background:rgba(255,255,255,.06);backdrop-filter:blur(6px);text-align:center;}
+    .header img{width:60px;height:60px;border-radius:50%;margin-bottom:6px;border:2px solid #ffffff80;}
+
+    /* ---- TYPING BOX ---- */
+    .typing-box{background:white;padding:10px 15px;border-radius:18px;display:flex;align-items:center;gap:7px;}
+    .dot{width:7px;height:7px;background:#777;border-radius:50%;animation:blink 1.3s infinite;}
+    .dot:nth-child(2){animation-delay:.2s;}
+    .dot:nth-child(3){animation-delay:.4s;}
+    @keyframes blink{0%,80%,100%{opacity:.3;}40%{opacity:1;}}
+</style>
 """, unsafe_allow_html=True)
 
+# ================= ENCABEZADO =================
+st.markdown(f"""
+<div class="header">
+    <img src="data:image/jpeg;base64,{bot_pic64}">
+    <h2 style='margin:0;'>Jerry</h2>
+    <span style="opacity:.7;">Tu asistente personal</span>
+</div>
+""", unsafe_allow_html=True)
 
-col1, col2 = st.columns([8, 2])
+# ================= CONTENEDOR FIJO PARA "JERRY ESTÁ ESCRIBIENDO" =================
+typing_top = st.empty()
 
+# ================= SISTEMA DEL CHAT =================
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+chat = st.container()
+with chat:
+    st.markdown("<div class='chat-scroll' id='chatbox'>", unsafe_allow_html=True)
+
+    for m in st.session_state.messages:
+        if m["role"]=="user":
+            st.markdown(f"""
+            <div class='msg' style='justify-content:right;'>
+                <div class='user-msg'>{m['content']}</div>
+                <img src="data:image/jpeg;base64,{user_pic64}" style="width:38px;height:38px;border-radius:50%;margin-left:7px;">
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div class='msg'>
+                <img src="data:image/jpeg;base64,{bot_pic64}" style="width:38px;height:38px;border-radius:50%;margin-right:7px;">
+                <div class='bot-msg'>{m['content']}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# ================= INPUT + BOTÓN =================
+col1,col2 = st.columns([8,2])
 with col1:
-    user_input = st.text_input("", placeholder="Escribe aquí...", key="input", label_visibility="collapsed")
-
+    user = st.text_input("", placeholder="Escribe aquí...", key="input", label_visibility="collapsed")
 with col2:
     send = st.button("Enviar", use_container_width=True)
 
+# ================= PROCESAR MENSAJE + TYPING INDICATOR =================
+def procesar():
+    st.session_state.messages.append({"role":"user","content":user})
 
-def procesar_mensaje():
-    if user_input.strip():
-        st.session_state["messages"].append({"role": "user", "content": user_input})
-        bot_reply = get_response(user_input)
-        st.session_state["messages"].append({"role": "bot", "content": bot_reply})
-        st.rerun()
+    # 🔥 ⬆ TYPING EN LA PARTE SUPERIOR DEL CHAT ⬆ 🔥
+    typing_top.markdown(f"""
+    <div style='margin-bottom:10px;display:flex;justify-content:center;'>
+        <div class='typing-box'>
+            <img src="data:image/jpeg;base64,{bot_pic64}" style="width:28px;height:28px;border-radius:50%;">
+            Jerry está escribiendo <div class='dot'></div><div class='dot'></div><div class='dot'></div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-if send:
-    procesar_mensaje()
+    time.sleep(1)
+    reply = get_response(user)
+    typing_top.empty()
+
+    st.session_state.messages.append({"role":"bot","content":reply})
+    st.rerun()
+
+if send and user.strip():
+    procesar()
